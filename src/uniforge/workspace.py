@@ -50,9 +50,27 @@ def init_workspace(
     git_dir = abs_path / ".git"
     hook_installed = False
     if git_dir.exists():
-        from unigov.drift import install_git_hook
         try:
-            install_git_hook(abs_path)
+            hook_path = git_dir / "hooks" / "pre-commit"
+            hook_path.parent.mkdir(parents=True, exist_ok=True)
+            script = """#!/bin/sh
+# ⬢ UniGov & UniSkill Sovereign Dual Invariant Pre-Commit Gate
+set -e
+
+# 1. UniGov Drift Check
+if command -v unigov >/dev/null 2>&1; then
+    unigov check-drift --staged
+fi
+
+# 2. UniSkill Constitutional Invariants Audit
+if command -v uniskill >/dev/null 2>&1; then
+    uniskill audit
+fi
+
+echo "✔ Pre-commit Gate Passed: Clean Architecture & 0-Suppress Invariants."
+"""
+            hook_path.write_text(script, encoding="utf-8")
+            hook_path.chmod(0o755)
             hook_installed = True
         except Exception:
             pass

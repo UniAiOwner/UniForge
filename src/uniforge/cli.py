@@ -15,6 +15,13 @@ app = typer.Typer(
 console = Console()
 
 
+@app.command("help")
+def help_cmd():
+    """Show help and available commands."""
+    import subprocess
+    subprocess.run([sys.executable, "-m", "uniforge.cli", "--help"])
+
+
 @app.command("doctor")
 def doctor_cmd():
     """Run full diagnostic audit across all 13 sovereign pillars and 9 packages."""
