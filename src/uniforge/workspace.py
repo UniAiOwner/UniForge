@@ -118,3 +118,4 @@ def get_workspace_status(project_path: Path) -> Dict[str, Any]:
         }
     finally:
         conn.close()
+
