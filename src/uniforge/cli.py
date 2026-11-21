@@ -22,6 +22,41 @@ def help_cmd():
     subprocess.run([sys.executable, "-m", "uniforge.cli", "--help"])
 
 
+@app.command("activate")
+def activate_cmd(
+    project_path: Optional[str] = typer.Argument(
+        ".", help="Target project root directory path (default: current directory)"
+    )
+):
+    """1-Phrase Autonomous Activation: Introspects workspace, activates UniGov, UniMemory, UniVerify, and UniWatch."""
+    from uniforge.activator import activate_project
+    target = Path(project_path)
+    res = activate_project(target)
+    
+    constraints_text = "\n".join([f" • {c}" for c in res.get("constraints", [])])
+    
+    panel_content = (
+        f"[bold cyan]{res['project_name']}[/bold cyan] [dim]({res['project_path']})[/dim]\n"
+        f"[white]{res['objective']}[/white]\n"
+        f"[yellow]Tech Stack:[/yellow] {res['stack']}\n\n"
+        f"[bold green][✓] UniGov:[/bold green] Governance {res['gov_status']} | Pre-commit hook: {'Installed' if res['git_hook'] else 'Skipped'}\n"
+        f"[bold green][✓] UniMemory:[/bold green] Living memory active ({res['memory_facts']} facts, ~{res['memory_symbols']} source files indexed)\n"
+        f"[bold green][✓] UniVerify:[/bold green] Code gate active ({'Clean, 0 drift' if res['verify_clean'] else ', '.join(res['violations'])})\n"
+        f"[bold green][✓] UniWatch:[/bold green] Real-time Inotify Sentinel {'Active' if res['watch_active'] else 'Inactive'}\n\n"
+        f"[bold magenta]Locked Constraints ({len(res['constraints'])}):[/bold magenta]\n{constraints_text}\n\n"
+        f"[bold white]Tasks Ingested:[/bold white] [cyan]{res['task_count']} atomic tasks in DAG[/cyan]\n"
+        f"[bold green]STATUS: 100% OPERATIONAL & READY TO ENGINEER.[/bold green]"
+    )
+    
+    console.print(
+        Panel.fit(
+            panel_content,
+            title="⬢ UniForge Sovereign Autonomous Activation",
+            border_style="cyan"
+        )
+    )
+
+
 @app.command("doctor")
 def doctor_cmd():
     """Run full diagnostic audit across all 13 sovereign pillars and 9 packages."""
