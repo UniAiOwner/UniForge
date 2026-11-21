@@ -1,0 +1,2 @@
+[console_scripts]
+unimemory = unimemory.cli:app

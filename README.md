@@ -1,0 +1,45 @@
+# UniForge (v1.0.0)
+**Sovereign Autonomous Developer Suite & Engineering Machine**
+
+UniForge brings together all 7 Sovereign Developer Services, the Sovereign Coding Triad, and the Frontal Lobe Deliberative Engine under a single high-performance monorepo.
+
+---
+
+## 🏛️ The 9 Pillars of UniForge
+
+| Pillar | Package | Primary Command | Sovereign Capability |
+| :--- | :--- | :--- | :--- |
+| **Pillar 1** | `packages/unigov` | `unigov` | State Machine, Task DAG, Invariant Locking & Drift Reconciler |
+| **Pillar 2** | `packages/uniskill` | `uniskill` | Surgical Skills Router, Token Economizer (88.9% savings) |
+| **Pillar 3** | `packages/unimemory` | `unimemory` | 5-Tier Living Memory Substrate & HippoRAG 2 Graph |
+| **Pillar 4** | `packages/univerify` | `univerify` | 4-Tier Gatekeeper (Z3 SMT Solver + Law-000 Guard) |
+| **Pillar 5** | `packages/uniexec` | `uniexec` | Isolated Code-Mode Execution Runtime (`bwrap` + `prlimit`) |
+| **Pillar 6** | `packages/unibus` | `unibus` | IPC & File Work Mutex Bus (Unix Domain Sockets + WAL) |
+| **Pillar 7** | `packages/uniwatch` | `uniwatch` | Linux Inotify Continuous Sentinel & AST Syntax Watchdog |
+| **Triad** | `packages/triad` | `triad` | Sovereign Coding Triad (Python + Kotlin + Security) |
+| **Deliberation** | `packages/deliberation`| `deliberate` | Frontal Lobe Deliberative Councils (5) + MCTS Planner |
+
+---
+
+## 🚀 Master CLI Commands
+
+```bash
+# 1. Holistic System Diagnosis (all 13 diagnostic pillars across the entire suite)
+uniforge doctor
+
+# 2. View Workspace Governance & Task Status
+uniforge status [path]
+
+# 3. 1-Click Sovereign Workspace Bootstrap
+uniforge init /path/to/project --project-name "ProjectName" --objective "Core Objective"
+
+# 4. View Suite Version and Manifest
+uniforge version
+
+# 5. Run Automated Tests
+uniforge test [--package unigov]
+```
+
+---
+
+*Architected by: Founder Shoeb Ahmad & Antigravity (Tera AI Bhai)*

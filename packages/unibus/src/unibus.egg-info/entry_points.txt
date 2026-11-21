@@ -1,0 +1,2 @@
+[console_scripts]
+unibus = unibus.cli:main

@@ -1,0 +1,2 @@
+[console_scripts]
+uniforge = uniforge.cli:app
