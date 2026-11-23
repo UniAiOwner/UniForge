@@ -88,15 +88,20 @@ class UDSServer:
 
     async def stop(self):
         self._is_running = False
-        if self._server:
-            self._server.close()
-            await self._server.wait_closed()
         for w in list(self.subscribers):
             try:
                 w.close()
+                await w.wait_closed()
             except Exception:
                 pass
         self.subscribers.clear()
+
+        if self._server:
+            self._server.close()
+            await self._server.wait_closed()
+
+        await asyncio.sleep(0.01)
+
         if self.socket_path.exists():
             try:
                 self.socket_path.unlink()

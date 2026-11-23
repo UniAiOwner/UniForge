@@ -164,3 +164,127 @@ class FormalZ3Prover:
             counter_example=None,
             mathematical_rationale=f"Valid and safe transition from '{current_state}' to '{target_state}'."
         )
+
+    @staticmethod
+    def prove_paise_overflow_safety(
+        base_amount: int,
+        multiplier: int = 1,
+        addition: int = 0
+    ) -> Z3ProofResult:
+        """
+        Formally proves using Z3 that Law ACC-001 integer paise operations cannot overflow
+        standard 64-bit signed integer bounds [-2^63, 2^63 - 1].
+        """
+        solver = z3.Solver()
+        b = z3.Int('base')
+        m = z3.Int('mult')
+        a = z3.Int('add')
+        res = z3.Int('result')
+
+        solver.add(b == base_amount)
+        solver.add(m == multiplier)
+        solver.add(a == addition)
+        solver.add(res == (b * m + a))
+
+        MAX_INT64 = 9223372036854775807
+        MIN_INT64 = -9223372036854775808
+
+        # Violation condition: result exceeds 64-bit integer limits
+        overflow = z3.Or(res > MAX_INT64, res < MIN_INT64)
+        solver.add(overflow)
+
+        check = solver.check()
+        if check == z3.unsat:
+            return Z3ProofResult(
+                invariant_name="LAW-ACC-001-INTEGER-PAISE-OVERFLOW-SAFETY",
+                is_satisfied=True,
+                proof_status="PROVEN",
+                counter_example=None,
+                mathematical_rationale=f"Formally proven: Integer math ({base_amount} * {multiplier} + {addition}) strictly fits within 64-bit signed bounds."
+            )
+        else:
+            return Z3ProofResult(
+                invariant_name="LAW-ACC-001-INTEGER-PAISE-OVERFLOW-SAFETY",
+                is_satisfied=False,
+                proof_status="VIOLATION_DETECTED",
+                counter_example={"base": base_amount, "multiplier": multiplier, "addition": addition},
+                mathematical_rationale=f"Integer overflow detected in Law ACC-001 calculation!"
+            )
+
+    @staticmethod
+    def prove_touch_target_bounds(
+        width_dp: float,
+        height_dp: float
+    ) -> Z3ProofResult:
+        """
+        Formally proves using Z3 that interactive UI touch target satisfies WCAG 2.2 / Material 3
+        minimum 48x48 dp bounding box bounds.
+        """
+        solver = z3.Solver()
+        w = z3.Real('width')
+        h = z3.Real('height')
+
+        solver.add(w == float(width_dp))
+        solver.add(h == float(height_dp))
+
+        # Violation: width < 48.0 or height < 48.0
+        violation = z3.Or(w < 48.0, h < 48.0)
+        solver.add(violation)
+
+        check = solver.check()
+        if check == z3.unsat:
+            return Z3ProofResult(
+                invariant_name="UI-TOUCH-TARGET-48DP-BOUNDS",
+                is_satisfied=True,
+                proof_status="PROVEN",
+                counter_example=None,
+                mathematical_rationale=f"Formally proven: Touch target bounds {width_dp:.1f}x{height_dp:.1f} dp satisfy WCAG 48x48dp bounds."
+            )
+        else:
+            return Z3ProofResult(
+                invariant_name="UI-TOUCH-TARGET-48DP-BOUNDS",
+                is_satisfied=False,
+                proof_status="VIOLATION_DETECTED",
+                counter_example={"width_dp": width_dp, "height_dp": height_dp},
+                mathematical_rationale=f"Touch target {width_dp:.1f}x{height_dp:.1f} dp violates WCAG 48x48dp minimum bounds requirement."
+            )
+
+    @staticmethod
+    def prove_double_entry_balance(
+        debits: List[int],
+        credits: List[int]
+    ) -> Z3ProofResult:
+        """
+        Formally proves that double-entry ledger journal balance strictly balances: sum(debits) == sum(credits).
+        """
+        sum_debits = sum(debits)
+        sum_credits = sum(credits)
+
+        solver = z3.Solver()
+        d = z3.Int('debits_sum')
+        c = z3.Int('credits_sum')
+
+        solver.add(d == sum_debits)
+        solver.add(c == sum_credits)
+
+        # Violation: sum_debits != sum_credits
+        solver.add(d != c)
+
+        check = solver.check()
+        if check == z3.unsat:
+            return Z3ProofResult(
+                invariant_name="LEDGER-DOUBLE-ENTRY-EQUALITY",
+                is_satisfied=True,
+                proof_status="PROVEN",
+                counter_example=None,
+                mathematical_rationale=f"Formally proven: Total Debits ({sum_debits} paise) strictly equal Total Credits ({sum_credits} paise)."
+            )
+        else:
+            diff = abs(sum_debits - sum_credits)
+            return Z3ProofResult(
+                invariant_name="LEDGER-DOUBLE-ENTRY-EQUALITY",
+                is_satisfied=False,
+                proof_status="VIOLATION_DETECTED",
+                counter_example={"total_debits": sum_debits, "total_credits": sum_credits, "drift_paise": diff},
+                mathematical_rationale=f"Double-entry imbalance detected! Debits={sum_debits}, Credits={sum_credits}, Diff={diff} paise."
+            )

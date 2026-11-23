@@ -40,6 +40,7 @@ class ArtifactScoreResult(BaseModel):
 
 
 class TestRunResult(BaseModel):
+    __test__ = False
     command: str = ""
     exit_code: int = 0
     passed: bool = True

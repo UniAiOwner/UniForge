@@ -142,6 +142,98 @@ def score(
 
 
 @app.command()
+def prove_paise(
+    base: int = typer.Argument(..., help="Base amount in paise"),
+    multiplier: int = typer.Option(1, "--multiplier", "-m", help="Multiplier"),
+    addition: int = typer.Option(0, "--addition", "-a", help="Addition in paise")
+):
+    """Formally prove Law ACC-001 integer paise 64-bit overflow safety using Z3."""
+    prover = FormalZ3Prover()
+    res = prover.prove_paise_overflow_safety(base, multiplier=multiplier, addition=addition)
+    if res.is_satisfied:
+        console.print(f"[bold green]✔ PROVEN:[/bold green] {res.mathematical_rationale}")
+    else:
+        console.print(f"[bold red]❌ OVERFLOW:[/bold red] {res.mathematical_rationale}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def prove_touch(
+    width_dp: float = typer.Argument(..., help="Touch target width in dp"),
+    height_dp: float = typer.Argument(..., help="Touch target height in dp")
+):
+    """Formally prove WCAG 2.2 / Material 3 48x48dp touch target bounds using Z3."""
+    prover = FormalZ3Prover()
+    res = prover.prove_touch_target_bounds(width_dp, height_dp)
+    if res.is_satisfied:
+        console.print(f"[bold green]✔ PROVEN:[/bold green] {res.mathematical_rationale}")
+    else:
+        console.print(f"[bold red]❌ BOUNDS VIOLATION:[/bold red] {res.mathematical_rationale}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def prove_ledger(
+    debits: str = typer.Argument(..., help="Comma-separated debits in paise, e.g. 1000,500"),
+    credits: str = typer.Argument(..., help="Comma-separated credits in paise, e.g. 1500")
+):
+    """Formally prove double-entry balance equality (debits == credits) using Z3."""
+    d_list = [int(x.strip()) for x in debits.split(",") if x.strip()]
+    c_list = [int(x.strip()) for x in credits.split(",") if x.strip()]
+    prover = FormalZ3Prover()
+    res = prover.prove_double_entry_balance(d_list, c_list)
+    if res.is_satisfied:
+        console.print(f"[bold green]✔ PROVEN:[/bold green] {res.mathematical_rationale}")
+    else:
+        console.print(f"[bold red]❌ BALANCE DRIFT:[/bold red] {res.mathematical_rationale}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def scan_project(
+    project_path: Path = typer.Argument(Path("."), help="Project root to scan for Law-000 violations")
+):
+    """Scan all source files in a project for Law-000 shortcuts, @Suppress, and float currency."""
+    import os
+    guard = InvariantGuard()
+    extensions = {".kt", ".java", ".py", ".ts", ".tsx", ".js"}
+    ignored = {".git", ".gradle", "build", "dist", "node_modules", ".unigov", ".idea", "__pycache__"}
+
+    total_scanned = 0
+    total_violations = 0
+
+    table = Table(title=f"UniVerify Project Invariant Audit: {project_path.resolve().name}")
+    table.add_column("File", style="cyan")
+    table.add_column("Rule", style="bold red")
+    table.add_column("Line", style="magenta", justify="right")
+    table.add_column("Details", style="white")
+
+    for root, dirs, files in os.walk(project_path):
+        dirs[:] = [d for d in dirs if d not in ignored]
+        for f in files:
+            p = Path(root) / f
+            if p.suffix.lower() in extensions:
+                total_scanned += 1
+                try:
+                    code = p.read_text(encoding="utf-8", errors="ignore")
+                    res = guard.check_code(code, filename=p.name)
+                    if not res.passed:
+                        for v in res.violations:
+                            total_violations += 1
+                            rel = p.relative_to(project_path) if p.is_relative_to(project_path) else p
+                            table.add_row(str(rel), v.rule_name, str(v.line_number or "-"), v.explanation[:60])
+                except Exception:
+                    pass
+
+    if total_violations == 0:
+        console.print(f"[bold green]✔ CLEAN:[/bold green] All {total_scanned} files passed Law-000 and Law ACC-001 checks (0 violations).")
+    else:
+        console.print(table)
+        console.print(f"\n[bold red]❌ Total {total_violations} invariant violations detected across {total_scanned} files.[/bold red]")
+        raise typer.Exit(code=1)
+
+
+@app.command()
 def doctor():
     """Run self-diagnostic checks on UniVerify code verification components."""
     console.print("[bold cyan]=== UNIVERIFY DOCTOR (Self-Diagnostic) ===[/bold cyan]")

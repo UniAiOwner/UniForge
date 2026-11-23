@@ -116,6 +116,8 @@ def get_workspace_status(project_path: Path) -> Dict[str, Any]:
             "task_counts": counts,
             "project_path": str(abs_path),
         }
+    except (sqlite3.OperationalError, sqlite3.DatabaseError):
+        return {"status": "UNINITIALIZED", "project_path": str(abs_path)}
     finally:
         conn.close()
 

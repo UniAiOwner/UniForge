@@ -79,3 +79,45 @@ def test_state_machine_transition_illegal():
     assert not res.is_satisfied
     assert res.proof_status == "VIOLATION_DETECTED"
     assert "Illegal transition" in res.mathematical_rationale
+
+
+def test_paise_overflow_safety_proven():
+    prover = FormalZ3Prover()
+    # 50,000 INR (5,000,000 paise) * 10 units + 500 paise
+    res = prover.prove_paise_overflow_safety(base_amount=5000000, multiplier=10, addition=500)
+    assert res.is_satisfied
+    assert res.proof_status == "PROVEN"
+    assert "fits within 64-bit" in res.mathematical_rationale
+
+
+def test_touch_target_bounds_proven():
+    prover = FormalZ3Prover()
+    # 48.0 x 48.0 dp is sound
+    res = prover.prove_touch_target_bounds(width_dp=48.0, height_dp=48.0)
+    assert res.is_satisfied
+    assert res.proof_status == "PROVEN"
+
+
+def test_touch_target_bounds_violation():
+    prover = FormalZ3Prover()
+    # 32.0 x 48.0 dp violates 48dp minimum
+    res = prover.prove_touch_target_bounds(width_dp=32.0, height_dp=48.0)
+    assert not res.is_satisfied
+    assert res.proof_status == "VIOLATION_DETECTED"
+
+
+def test_double_entry_balance_proven():
+    prover = FormalZ3Prover()
+    # Debits: 1000 + 500 = 1500, Credits: 1500
+    res = prover.prove_double_entry_balance(debits=[1000, 500], credits=[1500])
+    assert res.is_satisfied
+    assert res.proof_status == "PROVEN"
+
+
+def test_double_entry_balance_drift():
+    prover = FormalZ3Prover()
+    # Debits: 1000, Credits: 950 (50 paise drift)
+    res = prover.prove_double_entry_balance(debits=[1000], credits=[950])
+    assert not res.is_satisfied
+    assert res.proof_status == "VIOLATION_DETECTED"
+    assert res.counter_example["drift_paise"] == 50
