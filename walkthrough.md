@@ -1,61 +1,63 @@
-# UniEvolve: Anti-Rogue Self-Improvement Subsystem Walkthrough
+# UniGov 2.0: The Autonomous Sovereign Chief Architect Walkthrough
 
 ## Summary of Completed Work
-We implemented and rigorously verified **UniEvolve**, the sovereign continuous self-improvement subsystem in UniForge (`packages/unigov`). It empowers the system to optimize itself while permanently preventing reward hacking, test suppression, or rogue file mutations via 3 constitutional security hard-locks.
+We engineered, integrated, and verified **UniGov 2.0 (The Autonomous Sovereign Chief Architect)** inside `UniForge/packages/unigov`.
+All development and tests were strictly verified inside UniForge using isolated mock fixtures, touching zero external user projects.
 
 ---
 
-## 1. Implemented Components
+## 1. The 5 Autonomous Cognitive Organs
 
-### 1.1 `AntiRogueSentinel` (`unigov/src/unigov/evolution.py`)
-- **Lock 1: Canonical Path & Immutable Kernel Check**:
-  - Enforces `Path.resolve()` against all protected paths (`tests/**`, `test_*`, `evolution.py`, `z3_prover.py`, `gatekeeper.py`, `invariants.py`, `doctor.py`, `db.py`, `AGENTS.md`, `dev_logs.txt`).
-  - Detects and rejects path traversal attacks (`../` or symlink escapes) with `PATH_TRAVERSAL_DETECTED`.
-- **Lock 2: AST Safety & Test Suppression Check**:
-  - Scans Python AST for forbidden dynamic code execution calls (`eval`, `exec`, `__import__`, `compile`).
-  - Blocks forbidden module imports (`importlib`, `ctypes`, `subprocess`).
-  - Blocks test suppression markers (`pytest.mark.skip`, `pytest.mark.xfail`).
+### 1.1 Organ 1: Universal Codebase & Architecture Cartography (`unigov/cartography.py`)
+- Detects project tech stack: Android Compose, Next.js React, Rust Native, Python Backend, KMP.
+- Automatically maps files into Clean Architecture layers: `DOMAIN`, `DATA`, `PRESENTATION`, `INFRASTRUCTURE`.
+- Flags architectural layer boundary leaks (e.g. Presentation directly importing Data implementations).
+- Command: `unigov cartography [path]`
 
-### 1.2 `SandboxEvolutionEngine` (`unigov/src/unigov/evolution.py`)
-- **Lock 3: Monotonic Regression Gate & 2-Phase Commit**:
-  - Verifies that passing test counts never regress (`candidate_tests >= baseline_tests`).
-  - Verifies target metric improvement (e.g. latency must not increase).
-  - Transitions valid candidates to `PENDING_APPROVAL`.
-  - **Zero Live Code Mutation Invariant**: The live codebase remains 100% untouched during evolution generation.
+### 1.2 Organ 2: Screen & Spatial UI Layout Intelligence (`unigov/screen_intel.py`)
+- Parses Jetpack Compose (`@Composable`) and React TSX screen wireframes.
+- Extracts visual components: Scaffolds, TopBars, BottomBars, NavigationRails, Cards, LazyLists, TextInputs, Buttons.
+- Verifies touch target bounds (WCAG 48x48dp) and Android 15 edge-to-edge insets padding.
+- Command: `unigov screen-intel [path]`
 
-### 1.3 `EvolutionLedger` & Sovereign Controls
-- SQLite-backed ledger in `.unigov/evolution.db`.
-- Explicit human authorization gate: `unigov evolution-approve <id>`.
-- 1-Click Sovereign Rollback: `unigov evolution-rollback <id>` which inverts the patch and restores exact original SHA-256 byte-parity.
+### 1.3 Organ 3: Founder Vision & Ground Reality Anchor (`unigov/vision_anchor.py`)
+- Enforces Founder Shoeb Ahmad's 5-Year Mission invariants:
+  - **Law ACC-001 Integer Paise Invariant**: Flags Float/Double currency types.
+  - **Law-000 Zero-Shortcut Compliance**: Flags `@Suppress` and linter escape hatches.
+  - **Showroom Offline-First Resilience**: Flags UI layer remote network invocations missing local DB caching.
+- Command: `unigov vision-eval [path]`
+
+### 1.4 Organ 4: Autonomous Deliberative Reflex & Red Team Auto-Trigger (`unigov/auto_deliberation.py`)
+- Computes risk score based on blast radius and domain sensitivity (`FINANCIAL_LEDGER`, `AUTH_SECURITY`, `DATABASE_MIGRATION`).
+- Autonomously invokes **Devil's Advocate Council** and **Red Team Adversarial Council** when risk score >= 50 without waiting for user prompt.
+- Generates concrete attack vectors, edge-case failure scenarios, and countermeasures.
+- Command: `unigov auto-deliberate <file> [--diff diff_file]`
+
+### 1.5 Organ 5: Episodic Learning & Reflexive Rule Synthesizer (`unigov/reflexive_learner.py`)
+- Implements Law-STARK: records developer execution and test failures into episodic traces.
+- Clusters recurring error signatures and autonomously synthesizes candidate invariant rules.
+- Protects candidate rules with UniEvolve Lock 3 (`PENDING_APPROVAL` status requiring Founder ratification).
+- Command: `unigov learn-reflex`
 
 ---
 
-## 2. CLI Subcommands Added
-- `unigov evolution-list`: Lists all proposals, status, target metric, and target files.
-- `unigov evolution-show <id>`: Displays full unified diff, benchmark metrics, and safety checks.
-- `unigov evolution-approve <id>`: Phase 2 commit gate applying candidate to live code.
-- `unigov evolution-rollback <id>`: Restores pre-evolution snapshot.
+## 2. Empirical Verification Evidence
 
----
+### 2.1 UniGov 2.0 Organ Test Suite (`packages/unigov/tests/test_unigov_2_organs.py`)
+Ran `pytest packages/unigov/tests/test_unigov_2_organs.py -v`:
+- `test_organ1_cartography_stack_and_layers` -> **PASSED**
+- `test_organ2_screen_intel_compose_wireframe` -> **PASSED**
+- `test_organ3_vision_anchor_money_and_suppress` -> **PASSED**
+- `test_organ4_auto_deliberation_red_team_trigger` -> **PASSED**
+- `test_organ5_reflexive_learner_rule_synthesis` -> **PASSED**
+**Result: 5/5 PASSED in 0.37s.**
 
-## 3. Empirical Test Results
+### 2.2 UniGov Package Tests
+**73/73 PASSED in 4.77s (100% green)**.
 
-### 3.1 UniEvolve Specific Suite (`test_evolution.py`)
-Ran `pytest packages/unigov/tests/test_evolution.py -v`:
-- `test_lock1_immutable_tests_directory_blocked` -> **PASSED**
-- `test_lock1_immutable_safety_core_files_blocked` -> **PASSED**
-- `test_lock1_path_traversal_escape_blocked` -> **PASSED**
-- `test_lock2_ast_dynamic_code_execution_blocked` -> **PASSED**
-- `test_lock2_ast_forbidden_modules_and_test_suppression` -> **PASSED**
-- `test_lock3_monotonic_regression_blocked` -> **PASSED**
-- `test_lock3_latency_regression_blocked` -> **PASSED**
-- `test_two_phase_commit_pending_approval_and_live_protection` -> **PASSED**
-- `test_explicit_approval_and_rollback_parity` -> **PASSED**
-**Result: 9/9 PASSED in 0.51s.**
-
-### 3.2 Full UniForge Suite (`uniforge test`)
-Total: **218/218 TESTS PASSED (100% GREEN)**:
-- `unigov`: 68/68 passed
+### 2.3 Master Suite (`uniforge test`)
+Total: **223/223 TESTS PASSED across all 9 packages (100% green)**:
+- `unigov`: 73/73 passed
 - `uniskill`: 26/26 passed
 - `unimemory`: 20/20 passed
 - `univerify`: 33/33 passed
@@ -65,5 +67,5 @@ Total: **218/218 TESTS PASSED (100% GREEN)**:
 - `triad`: 7/7 passed
 - `deliberation`: 6/6 passed
 
-### 3.3 Diagnostic Health (`uniforge doctor`)
+### 2.4 Diagnostic Health (`uniforge doctor`)
 **15/15 PILLARS PASSED (100% Healthy & Operational)**.
