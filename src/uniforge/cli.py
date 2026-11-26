@@ -251,6 +251,44 @@ def plan_cmd(
     )
 
 
+@app.command("genesis")
+def genesis_cmd(
+    vision: str = typer.Argument(..., help="Raw project vision or idea in plain language"),
+    target_dir: str = typer.Option(".", "--dir", "-d", help="Target project directory"),
+    project_name: Optional[str] = typer.Option(None, "--name", "-n", help="Explicit project name"),
+    scaffold: bool = typer.Option(False, "--scaffold", "-s", help="Generate runnable starter folder & code skeleton"),
+    force: bool = typer.Option(False, "--force", "-f", help="Overwrite existing scaffold files"),
+    json_out: Optional[str] = typer.Option(None, "--json-out", help="Optional path to export JSON blueprint"),
+):
+    """Vision-to-Blueprint & Project Skeleton Architect: Categorizes vision, recommends stack, designs architecture/UI, and scaffolds starter code."""
+    from uniforge.genesis import VisionGenesisArchitect
+
+    root = Path(target_dir).resolve()
+    root.mkdir(parents=True, exist_ok=True)
+
+    architect = VisionGenesisArchitect()
+    bp = architect.generate_blueprint(vision, project_name=project_name)
+    architect.render_terminal_report(bp)
+
+    md_path = architect.export_blueprint_markdown(bp, root / "PLANNING" / "MASTER_ARCHITECTURE_BLUEPRINT.md")
+    task_count = architect.register_unigov_tasks(bp, root)
+    scaffolded = architect.scaffold_skeleton(bp, root, force=force) if scaffold else []
+
+    if json_out:
+        jp = Path(json_out).resolve()
+        jp.parent.mkdir(parents=True, exist_ok=True)
+        jp.write_text(bp.model_dump_json(indent=2), encoding="utf-8")
+
+    scaffold_msg = f"\n[bold green]✓ Scaffolded Files:[/bold green] {len(scaffolded)} files" if scaffold else "\n[dim]Tip: Pass --scaffold (-s) to generate starter folders & code.[/dim]"
+    console.print(
+        Panel.fit(
+            f"[bold green]✓ Blueprint Exported:[/bold green] {md_path}\n"
+            f"[bold green]✓ UniGov Tasks Registered:[/bold green] {task_count} tasks in {root / '.unigov' / 'state.db'}"
+            f"{scaffold_msg}",
+            title="⬢ UniForge Genesis Complete",
+            border_style="green",
+        )
+    )
 
 
 if __name__ == "__main__":

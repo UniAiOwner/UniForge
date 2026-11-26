@@ -264,3 +264,43 @@
 
 ---
 *Signed by: Shoeb Ahmad*
+
+
+## 📅 Date: 2026-11-26 — UniForge Public GitHub Release & ASCII Architecture README
+
+### 🚀 Major Achievements:
+- Designed and published an ASCII-art `README.md` for `UniForge` covering the 9 Sovereign Pillars, UniGov 2.0's 5 Autonomous Cognitive Organs, Master CLI commands, and repository layout.
+- Added `.gitignore` (excluding `__pycache__`, `*.pyc`, `.pytest_cache/`, `*.egg-info/`, `.unigov/`, and unrelated temporary assets) and cleaned cached bytecode files from git index.
+- Added `.gitmodules` linking `packages/unigov` and `packages/uniskill` to their upstream GitHub repositories.
+- Created public GitHub repository `UniAiOwner/UniForge` and pushed `master` branch (`f1becd7`).
+
+### 🧪 Verification:
+- `gh repo view UniAiOwner/UniForge --json url,visibility,defaultBranchRef`: Confirmed `PUBLIC` repository live at `https://github.com/UniAiOwner/UniForge` on branch `master`.
+
+### 📌 Current State:
+- `UniForge` is live and public on GitHub.
+
+---
+*Signed by: Shoeb Ahmad*
+
+
+## 📅 Date: 2026-11-26 — UniForge Genesis (Vision-to-Blueprint & Project Skeleton Engine)
+
+### 🚀 Major Achievements:
+- Built `src/uniforge/genesis.py` (`VisionGenesisArchitect`) and wired `uniforge genesis` CLI command into `src/uniforge/cli.py`:
+  1. **Vision Categorization**: Classifies domain (`RETAIL_POS`, `HEALTHCARE`, `FINTECH`, `AI_SYSTEM`, `CLI_DEVTOOL`, `SAAS_WEB`, `GENERAL_APP`), target platforms (word-boundary safe), offline-first needs, core entities, and constraints.
+  2. **Tech Stack Recommender**: Recommends primary stack (`android_compose_room`, `nextjs_postgres`, `python_fastapi`, `python_cli`, `rust_desktop`) + alternatives & rationale.
+  3. **Clean Architecture & ASCII Data Flow**: Generates layered module map, ASCII data-flow diagram, and repository contracts.
+  4. **UI/UX Direction & Screen Map**: Recommends visual style, palette, typography, and screen specs with all 5 UI states (`Loading`, `Empty`, `Error`, `Success`, `Offline`).
+  5. **Strategic Roadmap & UniGov Registration**: Synthesizes 3-phase roadmap, exports `PLANNING/MASTER_ARCHITECTURE_BLUEPRINT.md`, and registers tasks into `.unigov/state.db`.
+  6. **Project Skeleton Generator (`--scaffold`)**: Generates portable starter folder structures, config files, domain models, and smoke tests without hardcoded machine paths.
+
+### 🧪 Verification:
+- `pytest tests/test_genesis.py -v`: **3/3 passed in 0.34s**.
+- Live CLI E2E test (`uniforge genesis ... --name "ClinicRx" --scaffold` in `/tmp/test_genesis_demo`): Verified HEALTHCARE categorization, Android Compose + Room recommendation, aligned ASCII architecture, 6 registered UniGov tasks, and 5 scaffolded files.
+
+### 📌 Current State:
+- `uniforge genesis` is live, tested, and pushed to `UniAiOwner/UniForge`.
+
+---
+*Signed by: Shoeb Ahmad*
