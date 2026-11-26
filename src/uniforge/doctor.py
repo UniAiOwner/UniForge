@@ -3,6 +3,7 @@
 Audits all 13 sovereign diagnostic pillars across the entire unified suite.
 """
 
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -11,7 +12,7 @@ from rich.table import Table
 
 console = Console()
 
-SUITE_ROOT = Path("/media/uniai/UniAi/PROJECTS_MIGRATED/UniForge")
+SUITE_ROOT = Path(os.environ.get("UNIFORGE_HOME", str(Path(__file__).resolve().parents[2])))
 PACKAGES = [
     "unigov", "uniskill", "unimemory", "univerify",
     "uniexec", "unibus", "uniwatch", "triad", "deliberation"

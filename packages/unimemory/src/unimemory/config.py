@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 
 # Base Paths
-DEFAULT_UNICORTEX_DIR = Path("/home/uniai/.unicortex") if Path("/home/uniai/.unicortex").exists() else Path.home() / ".unicortex"
+DEFAULT_UNICORTEX_DIR = Path(os.environ.get("UNICORTEX_HOME", str(Path.home() / ".unicortex")))
 DEFAULT_DB_PATH = DEFAULT_UNICORTEX_DIR / "brain_memory.db"
 
 BRAIN_MEMORY_DB = Path(os.environ.get("UNICORTEX_BRAIN_MEMORY_DB", str(DEFAULT_DB_PATH)))

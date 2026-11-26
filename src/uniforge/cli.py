@@ -135,9 +135,10 @@ def test_cmd(
     )
 ):
     """Run automated verification test suites across UniForge packages."""
+    import os
     import subprocess
-    suite_root = Path("/media/uniai/UniAi/PROJECTS_MIGRATED/UniForge/packages")
-    python_bin = "/home/uniai/.local/venv314/bin/python"
+    suite_root = Path(os.environ.get("UNIFORGE_HOME", str(Path(__file__).resolve().parents[2]))) / "packages"
+    python_bin = sys.executable
     
     targets = [package] if package else ["unigov", "uniskill", "unimemory", "univerify", "uniexec", "unibus", "uniwatch", "triad", "deliberation"]
     
@@ -187,34 +188,38 @@ def version_cmd():
 
 @app.command("synthesize")
 def synthesize_cmd(
-    target_workspace: Optional[str] = typer.Option(
-        "/media/uniai/UniAi/AI/ALL AI MERGED", "--target", "-t", help="Target unified workspace directory"
+    target_workspace: str = typer.Option(
+        ".", "--target", "-t", help="Target unified workspace directory"
     ),
     output_report: Optional[str] = typer.Option(
-        "/media/uniai/UniAi/AI/ALL AI MERGED/PLANNING/synthesis_matrix.json", "--output", "-o", help="Path to export forensic matrix JSON"
-    )
+        None, "--output", "-o", help="Path to export forensic matrix JSON"
+    ),
+    repos_config: Optional[str] = typer.Option(
+        None, "--repos-config", "-c", help="Optional JSON file mapping repo names to paths"
+    ),
 ):
     """Pillar 10: Multi-Repo Cross-AST Forensic Audit, Deduplication & SOTA Quality Synthesis."""
+    import json
     from uniforge.synthesizer import MultiRepoSynthesizer
 
-    default_repos = {
-        "UniAGI": "/media/uniai/UniAi/AI/UniAGI",
-        "Agentic team": "/media/uniai/UniAi/PROJECTS_MIGRATED/Agentic team",
-        "UniBrain": "/media/uniai/UniAi/PROJECTS_MIGRATED/UniBrain",
-        "UNIAI_CORE": "/media/uniai/UniAi/PROJECTS_MIGRATED/UNIAI_CORE",
-        "UniAi_V2_MIGRATED": "/media/uniai/UniAi/PROJECTS_MIGRATED/UniAi_V2",
-        "UniAI_Home": "/media/uniai/UniAi/## Home/PROJECTS/UniAI",
-        "UniAi_BY_KIMI": "/media/uniai/E/## PROJECT RELATED/UniAi_BY_KIMI",
-        "UniAi_V2_E": "/media/uniai/E/## PROJECT RELATED/UniAi_V2",
-        "TheUniAi_Desktop": "/home/uniai/Desktop/TheUniAi",
-        "NEW_PLAN": "/media/uniai/UniAi/AI/NEw PLAN for UniAI",
-    }
+    target_p = Path(target_workspace).resolve()
+    repos: dict[str, str] = {}
+    cfg_path = Path(repos_config).resolve() if repos_config else (target_p / ".uniforge" / "repos.json")
+    if cfg_path.exists():
+        repos = json.loads(cfg_path.read_text(encoding="utf-8"))
+    else:
+        # Auto-discover git repositories inside target workspace
+        for child in sorted(target_p.iterdir()):
+            if child.is_dir() and (child / ".git").exists():
+                repos[child.name] = str(child)
+        if not repos:
+            repos[target_p.name] = str(target_p)
 
-    synthesizer = MultiRepoSynthesizer(default_repos, target_workspace or "/media/uniai/UniAi/AI/ALL AI MERGED")
+    synthesizer = MultiRepoSynthesizer(repos, str(target_p))
     summary = synthesizer.scan_and_analyze()
     synthesizer.print_report(summary)
 
-    out_p = Path(output_report)
+    out_p = Path(output_report).resolve() if output_report else (target_p / "PLANNING" / "synthesis_matrix.json")
     out_p.parent.mkdir(parents=True, exist_ok=True)
     synthesizer.export_matrix(str(out_p))
 

@@ -304,3 +304,24 @@
 
 ---
 *Signed by: Shoeb Ahmad*
+
+
+## 📅 Date: 2026-11-26 — UniForge 100% Decoupling & Zero-Hardlink Portability Gate
+
+### 🚀 Major Achievements:
+- Eliminated all hardcoded machine paths (`/home/uniai/...`, `/media/uniai/...`) and hardcoded project references (`UniRetailApp`) across `src/uniforge/` and `packages/{uniexec,unigov,unimemory,uniskill}/src/`:
+  * Replaced static paths with dynamic `Path.home()`, `Path(__file__).resolve()`, `sys.executable`, `site.getsitepackages()`, and environment overrides (`UNIFORGE_HOME`, `UNICORTEX_HOME`, `UNICORTEX_ENGINE_DIR`, `UNICORTEX_PRIMES_DIR`).
+  * Updated `uniexec/sandbox.py` to pass `UNICORTEX_HOME` dynamically into the Bubblewrap sandbox so `HOME=/tmp` isolation does not break `.unicortex` lookups.
+  * Updated `uniforge synthesize` to auto-discover git repos in target workspace or read `.uniforge/repos.json` instead of hardcoded local directories.
+- Added automated **Portability & Zero-Hardlink Gate** (`tests/test_portability_gate.py`) scanning all `src/` and `packages/*/src/` Python files to block any future regression.
+
+### 🧪 Verification:
+- `pytest tests/test_portability_gate.py tests/test_genesis.py -v`: **4/4 passed** in 0.39s.
+- `uniforge test -p uniexec`: **19/19 passed** in 4.75s (including `test_prelude_get_beacon`).
+- All 9 UniForge packages (`unigov` 73, `uniskill` 26, `unimemory` 20, `univerify` 33, `uniexec` 19, `unibus` 22, `uniwatch` 17, `triad` 7, `deliberation` 6) verified passing (**227/227** total including root tests).
+
+### 📌 Current State:
+- UniForge is 100% standalone, zero-hardlink, and portable across projects and machines.
+
+---
+*Signed by: Shoeb Ahmad*

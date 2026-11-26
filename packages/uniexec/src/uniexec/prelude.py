@@ -72,7 +72,9 @@ class UniExecPrelude:
     @staticmethod
     def consult_scientist(inquiry: str, domain_context: Optional[str] = None) -> Dict[str, Any]:
         """Consult IQ200 AI Scientist for SOTA research literature synthesis."""
-        scientist_dir = "/media/uniai/UniAi/PROJECTS_MIGRATED/Agentic team/01_UNICORTEX_ENGINE/ai_scientist"
+        import os
+        engine_root = os.environ.get("UNICORTEX_ENGINE_DIR", str(Path.home() / ".unicortex" / "engine"))
+        scientist_dir = str(Path(engine_root) / "ai_scientist")
         if scientist_dir not in sys.path:
             sys.path.insert(0, scientist_dir)
         try:
@@ -83,8 +85,10 @@ class UniExecPrelude:
 
     @staticmethod
     def query_research_papers(query: str, category: Optional[str] = None, top_k: int = 5) -> List[Dict[str, Any]]:
-        """Query 379+ ArXiv research papers via sub-millisecond SQLite FTS5."""
-        scientist_dir = "/media/uniai/UniAi/PROJECTS_MIGRATED/Agentic team/01_UNICORTEX_ENGINE/ai_scientist"
+        """Query research papers via sub-millisecond SQLite FTS5."""
+        import os
+        engine_root = os.environ.get("UNICORTEX_ENGINE_DIR", str(Path.home() / ".unicortex" / "engine"))
+        scientist_dir = str(Path(engine_root) / "ai_scientist")
         if scientist_dir not in sys.path:
             sys.path.insert(0, scientist_dir)
         try:
@@ -96,7 +100,9 @@ class UniExecPrelude:
     @staticmethod
     def convene_council(council_name: str, proposal_topic: str, proposal_code_or_spec: str) -> Dict[str, Any]:
         """Convene one of the 5 Sovereign Councils for multi-agent deliberation."""
-        councils_dir = "/media/uniai/UniAi/PROJECTS_MIGRATED/Agentic team/01_UNICORTEX_ENGINE/councils"
+        import os
+        engine_root = os.environ.get("UNICORTEX_ENGINE_DIR", str(Path.home() / ".unicortex" / "engine"))
+        councils_dir = str(Path(engine_root) / "councils")
         if councils_dir not in sys.path:
             sys.path.insert(0, councils_dir)
         try:

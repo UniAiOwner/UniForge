@@ -127,8 +127,9 @@ class SandboxOrchestrator:
             if Path(lib_path).exists():
                 cmd.extend(["--ro-bind", lib_path, lib_path])
 
-        # Intermediate directories
-        for directory in ("/home", "/home/uniai", "/media", "/media/uniai"):
+        # Intermediate directories (derived dynamically from HOME)
+        home_str = str(Path.home())
+        for directory in ("/home", home_str):
             cmd.extend(["--dir", directory])
 
         # Read-only mounts
@@ -137,9 +138,12 @@ class SandboxOrchestrator:
                 cmd.extend(["--ro-bind", source, source])
 
         # Environment configuration
+        local_bin = str(Path.home() / ".local" / "bin")
+        unicortex_home = str(Path.home() / ".unicortex")
         cmd.extend([
             "--setenv", "HOME", "/tmp",
-            "--setenv", "PATH", "/home/uniai/.local/bin:/usr/local/bin:/usr/bin:/bin",
+            "--setenv", "UNICORTEX_HOME", unicortex_home,
+            "--setenv", "PATH", f"{local_bin}:/usr/local/bin:/usr/bin:/bin",
             "--setenv", "PYTHONDONTWRITEBYTECODE", "1",
             "--setenv", "GIT_OPTIONAL_LOCKS", "0",
             "--setenv", "GIT_CONFIG_NOSYSTEM", "1",

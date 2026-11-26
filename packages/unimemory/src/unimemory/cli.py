@@ -95,7 +95,7 @@ def sync(
 @app.command()
 def migrate(
     legacy_dir: str = typer.Option(
-        "/media/uniai/UniAi/PROJECTS_MIGRATED/Agentic team/02_UCMF_MEMORY",
+        ...,
         "--source", "-s",
         help="Path to legacy 02_UCMF_MEMORY directory"
     ),

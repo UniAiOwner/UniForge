@@ -15,7 +15,7 @@ from unimemory.episodic import EpisodicMemoryManager
 
 
 def migrate_legacy_databases(
-    legacy_dir: Path = Path("/media/uniai/UniAi/PROJECTS_MIGRATED/Agentic team/02_UCMF_MEMORY"),
+    legacy_dir: Path = Path.home() / ".unicortex" / "legacy_memory",
     dest_db: Optional[sqlite3.Connection] = None
 ) -> Dict[str, Any]:
     """Imports historical facts and decisions into the unified UniMemory substrate."""
