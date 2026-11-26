@@ -178,9 +178,79 @@ def version_cmd():
         ("uniwatch", "Pillar 7: Linux Inotify Sentinel & Watchdog"),
         ("triad", "Sovereign Coding Triad (Python+Kotlin+Security)"),
         ("deliberation", "Frontal Lobe Deliberative Councils & MCTS"),
+        ("synthesizer", "Pillar 10: Multi-Repo AST Synthesizer & Code Transplanter"),
+        ("planner", "Pillar 11: Sovereign Architectural Roadmap & Task DAG Synthesizer"),
     ]
     for name, desc in packages:
         console.print(f"  • [bold white]{name:<14}[/bold white] - [cyan]{desc}[/cyan]")
+
+
+@app.command("synthesize")
+def synthesize_cmd(
+    target_workspace: Optional[str] = typer.Option(
+        "/media/uniai/UniAi/AI/ALL AI MERGED", "--target", "-t", help="Target unified workspace directory"
+    ),
+    output_report: Optional[str] = typer.Option(
+        "/media/uniai/UniAi/AI/ALL AI MERGED/PLANNING/synthesis_matrix.json", "--output", "-o", help="Path to export forensic matrix JSON"
+    )
+):
+    """Pillar 10: Multi-Repo Cross-AST Forensic Audit, Deduplication & SOTA Quality Synthesis."""
+    from uniforge.synthesizer import MultiRepoSynthesizer
+
+    default_repos = {
+        "UniAGI": "/media/uniai/UniAi/AI/UniAGI",
+        "Agentic team": "/media/uniai/UniAi/PROJECTS_MIGRATED/Agentic team",
+        "UniBrain": "/media/uniai/UniAi/PROJECTS_MIGRATED/UniBrain",
+        "UNIAI_CORE": "/media/uniai/UniAi/PROJECTS_MIGRATED/UNIAI_CORE",
+        "UniAi_V2_MIGRATED": "/media/uniai/UniAi/PROJECTS_MIGRATED/UniAi_V2",
+        "UniAI_Home": "/media/uniai/UniAi/## Home/PROJECTS/UniAI",
+        "UniAi_BY_KIMI": "/media/uniai/E/## PROJECT RELATED/UniAi_BY_KIMI",
+        "UniAi_V2_E": "/media/uniai/E/## PROJECT RELATED/UniAi_V2",
+        "TheUniAi_Desktop": "/home/uniai/Desktop/TheUniAi",
+        "NEW_PLAN": "/media/uniai/UniAi/AI/NEw PLAN for UniAI",
+    }
+
+    synthesizer = MultiRepoSynthesizer(default_repos, target_workspace or "/media/uniai/UniAi/AI/ALL AI MERGED")
+    summary = synthesizer.scan_and_analyze()
+    synthesizer.print_report(summary)
+
+    out_p = Path(output_report)
+    out_p.parent.mkdir(parents=True, exist_ok=True)
+    synthesizer.export_matrix(str(out_p))
+
+
+@app.command("plan")
+def plan_cmd(
+    workspace: Optional[str] = typer.Argument(
+        ".", help="Target project workspace directory (default: current directory)"
+    ),
+    markdown_output: Optional[str] = typer.Option(
+        None, "--output-markdown", "-o", help="Path to export markdown plan"
+    )
+):
+    """Pillar 11: Sovereign Architectural Roadmap & Task DAG Synthesis Engine."""
+    from uniforge.planner import SovereignRoadmapPlanner
+    target_p = Path(workspace).resolve()
+    planner = SovereignRoadmapPlanner(target_p)
+    tasks = planner.synthesize_master_plan()
+    inserted_tasks, inserted_deps = planner.compile_plan_to_unigov(tasks)
+    
+    md_out = Path(markdown_output) if markdown_output else (target_p / "PLANNING" / "antigravity_plan" / "sovereign_master_roadmap_2026_2030.md")
+    planner.export_markdown_plan(tasks, md_out)
+    planner.render_terminal_tree(tasks)
+    
+    console.print(
+        Panel.fit(
+            f"[bold green]✓ Synthesized & Ingested {inserted_tasks} Tasks across 4 Strategic Phases[/bold green]\n"
+            f"[white]Dependencies Locked:[/white] [cyan]{inserted_deps} DAG edges[/cyan]\n"
+            f"[dim]Governance DB:[/dim] [dim]{planner.db_path}[/dim]\n"
+            f"[dim]Plan Document:[/dim] [dim]{md_out}[/dim]",
+            title="⬢ UniForge Roadmap Synthesis Complete",
+            border_style="green"
+        )
+    )
+
+
 
 
 if __name__ == "__main__":

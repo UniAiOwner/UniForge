@@ -197,7 +197,7 @@ def scan_project(
     import os
     guard = InvariantGuard()
     extensions = {".kt", ".java", ".py", ".ts", ".tsx", ".js"}
-    ignored = {".git", ".gradle", "build", "dist", "node_modules", ".unigov", ".idea", "__pycache__"}
+    ignored = {".git", ".gradle", "build", "dist", "node_modules", ".unigov", ".idea", "__pycache__", ".next", ".pytest_cache"}
 
     total_scanned = 0
     total_violations = 0

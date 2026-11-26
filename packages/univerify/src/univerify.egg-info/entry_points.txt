@@ -1,2 +1,0 @@
-[console_scripts]
-univerify = univerify.cli:app

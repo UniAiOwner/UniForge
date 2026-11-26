@@ -1,0 +1,6 @@
+[submodule "packages/unigov"]
+	path = packages/unigov
+	url = https://github.com/UniAiOwner/unigov.git
+[submodule "packages/uniskill"]
+	path = packages/uniskill
+	url = https://github.com/UniAiOwner/uniskill.git

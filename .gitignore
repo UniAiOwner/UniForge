@@ -1,0 +1,22 @@
+# Python caches & build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+dist/
+build/
+.venv/
+venv/
+
+# Local runtime state & databases
+.unigov/
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# Unrelated temporary planning assets
+PLANNING/Rang+Chakra+12+Color/
+PLANNING/Rang+Chakra+12+Color.tar.gz
+PLANNING/Chroma+Antigravity+Color+Final/
