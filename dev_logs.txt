@@ -347,3 +347,47 @@
 
 ---
 *Signed by: Shoeb Ahmad*
+
+## 📅 Date: 2026-11-27 — UniForge Git Sync, Doctor Audit & AST Cache Benchmark
+
+### 🚀 Major Achievements:
+- Committed UniGov self-upgrade (`packages/unigov` commit `e2edd4d`) and UniForge root sync (`9e9200a`).
+- Executed full 15-pillar `uniforge doctor` diagnostic across all 9 packages, systemd daemon, MCP servers, Z3 gatekeeper, bwrap sandbox, and IPC/inotify buses.
+- Verified real-world `unigov drift --skip-llm --unstaged` and benchmarked `.unigov/ast_cache.db` on the full UniForge repository (`1221` symbols, `9892` edges).
+
+### 🧪 Verification:
+- `uniforge doctor`: ALL 15 DIAGNOSTIC PILLARS PASSED (`100% HEALTHY & READY`).
+- `unigov drift --skip-llm --unstaged`: `Deterministic Security Scan Passed.`
+- AST Cache Benchmark: Cold `2.490s` -> Warm `0.118s` (~21x speedup).
+
+### 📌 Current State:
+- UniForge and UniGov are cleanly committed, 100% healthy across all 15 pillars, and empirically verified.
+
+### 📝 Next Steps:
+- Ready for next Founder priority.
+
+---
+*Signed by: Shoeb Ahmad*
+
+## 📅 Date: 2026-11-27 — 15-Dimension Vision/Plan Sync, Ingest Upgrades & Universal Error Telemetry
+
+### 🚀 Major Achievements:
+- Built `packages/unigov/src/unigov/vision_plan_sync.py` (`sync_vision_and_plan`) wiring `state.db` (`project_vision`, `tasks`, `ingested_docs`) directly into `<project_root>/PROJECT_VISION_AND_PLAN/` using `scaffolder.py`'s 15-dimension architecture (`00_MASTER_ROADMAP.md` + `01_VISION_AND_CONSTRAINTS/` through `15_SELF_HEALING_AND_RESILIENCE/`).
+- Upgraded `packages/unigov/src/unigov/ingest.py` with Anti-Loop directory exclusion (`PROJECT_VISION_AND_PLAN`), incremental changed-file prompting, deterministic offline markdown fallback (`_parse_markdown_offline`), Anti-Zombie `PENDING` task/deleted-doc cleanup, and `t.layer` preservation.
+- Built `packages/unigov/src/unigov/error_telemetry.py` featuring PII/secret scrubbing (`scrub_pii`), 20-step breadcrumb ring buffer, innermost-frame SHA-256 fingerprinting & deduplication, `OPEN`/`FIXED`/`REGRESSION` lifecycle, crash-safe local `.unigov/error_logs/` persistence (`events.db` + `queue/`), shareable `.zip` export (`export_bug_bundle`), and optional Firebase Firestore REST sync (`sync_errors_to_firebase`).
+- Registered `errors` and `bug-bundle` CLI commands in `packages/unigov/src/unigov/cli.py` and locked `INV-OBS-001` in `scaffolder.py` (`11_OBSERVABILITY_AND_ROLLOUT`).
+- Added 7 unit tests across `tests/test_vision_plan_and_ingest.py` and `tests/test_error_telemetry.py`.
+
+### 🧪 Verification:
+- `uniforge test`: All 9 target test suites passed (`unigov`: 84 passed, 234/234 total across monorepo).
+- `unigov audit-self`: `Registered CLI Commands: 75`, `System Health Score: 100/100`, `Action Items Identified: 0`.
+- `uniforge doctor`: ALL 15 DIAGNOSTIC PILLARS PASSED (`100% HEALTHY & READY`).
+
+### 📌 Current State:
+- UniGov v1.1.0 upgraded with live 15-dimension `PROJECT_VISION_AND_PLAN/` sync and universal offline-first error telemetry + shareable bug bundles.
+
+### 📝 Next Steps:
+- Commit changes in `packages/unigov` and `UniForge` root when ready.
+
+---
+*Signed by: Shoeb Ahmad*
