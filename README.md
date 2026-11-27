@@ -14,7 +14,7 @@
 ### **Sovereign Autonomous Developer Suite & Engineering Machine**
 
 [![Version](https://img.shields.io/badge/UniGov-v1.1.0_(100%2F100_Audit)-8b5cf6?style=for-the-badge)]()
-[![Tests](https://img.shields.io/badge/Tests-234%2F234_Passing-emerald?style=for-the-badge)]()
+[![Tests](https://img.shields.io/badge/Tests-236%2F236_Passing-emerald?style=for-the-badge)]()
 [![Doctor](https://img.shields.io/badge/Doctor-15%2F15_Pillars_Healthy-0ea5e9?style=for-the-badge)]()
 [![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge)]()
 
@@ -90,6 +90,7 @@ D --> E["Pre-Commit Gate"]
   - `OPEN -> FIXED -> REGRESSION` lifecycle tracking in `.unigov/error_logs/events.db` + crash-safe `queue/*.json`.
   - 1-command shareable redacted `.zip` diagnostic export (`unigov bug-bundle`) and optional Firebase Firestore REST sync (`unigov errors --sync`).
 - **Drift & Self-Audit (`unigov drift`, `unigov audit-self`)**: Staged/unstaged drift & secret scanning plus `100/100` self-audit health verification.
+- **UniForge Researcher (`unigov research`, `uniforge research`)**: Scans Android Gradle, Python, and Node manifests against 2026 SOTA baselines, deprecation rules (`kotlin-kapt` → `KSP2`, `SafetyNet` → `Play Integrity`, `targetSdk < 35`, `Java < 21`, R8 release minification), and optional live PyPI/npm registry checks (`--online`), outputting `PLANNING/RESEARCH_LATEST_STANDARDS.md`.
 
 ---
 
@@ -112,8 +113,11 @@ uniforge activate
 # Run holistic 15-pillar system diagnostics
 uniforge doctor
 
-# Run all 9 monorepo test suites (234 tests)
+# Run all 9 monorepo test suites (236 tests)
 uniforge test
+
+# Audit project stack against latest 2026 standards & deprecations
+uniforge research [path] [--online]
 
 # View active workspace governance, constraints & DAG status
 uniforge status [path]

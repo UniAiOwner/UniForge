@@ -296,5 +296,20 @@ def genesis_cmd(
     )
 
 
+@app.command("research")
+def research_cmd(
+    path: Path = typer.Argument(Path("."), help="Target project directory to audit against latest standards."),
+    topic: Optional[str] = typer.Option(None, "--topic", help="Optional focus topic for the research report."),
+    online: bool = typer.Option(False, "--online", help="Query live PyPI/npm registries for latest versions."),
+    no_report: bool = typer.Option(False, "--no-report", help="Do not write PLANNING/RESEARCH_LATEST_STANDARDS.md."),
+):
+    """Run UniForge Researcher to check project stack against latest 2026 standards."""
+    from unigov.researcher import run_research
+
+    res = run_research(project_root=path, topic=topic, online=online, write_report=not no_report)
+    if res.get("report_path"):
+        console.print(f"[bold green]✓ Research Report:[/bold green] {res['report_path']}")
+
+
 if __name__ == "__main__":
     app()
