@@ -325,3 +325,25 @@
 
 ---
 *Signed by: Shoeb Ahmad*
+
+## 📅 Date: 2026-11-27 — UniGov Self-Upgrade (100/100 Health Score)
+
+### 🚀 Major Achievements:
+- Registered missing `drift` CLI command in `packages/unigov/src/unigov/cli.py` wired to `run_drift_check` (`--staged/--unstaged`, `--skip-llm`, `--model`, `--provider`).
+- Implemented Parent Milestone Auto-Rollup (`_rollup_completed_parents`) in `packages/unigov/src/unigov/executor.py` so parent `MODULE` and `MILESTONE` tasks automatically roll up to `COMPLETED` when all child tasks finish.
+- Added incremental SHA-256 AST caching via `.unigov/ast_cache.db` in `packages/unigov/src/unigov/ast_graph.py` (`_open_ast_cache` & `build_project_ast_graph`) with automatic invalidation on file edits and pruning on deletion.
+- Updated `packages/unigov/src/unigov/self_audit.py` to detect active `.unigov/ast_cache.db` SHA-256 caching.
+- Added unit tests in `packages/unigov/tests/test_unigov_self_upgrade.py` and synced plan to `PLANNING/antigravity_plan/unigov_self_upgrade_plan.md`.
+
+### 🧪 Verification:
+- `uniforge test`: All 9 target test suites passed (`unigov`: 77 passed, `uniskill`: 26, `unimemory`: 20, `univerify`: 33, `uniexec`: 19, `unibus`: 22, `uniwatch`: 17, `triad`: 7, `deliberation`: 6 — 227/227 total).
+- `unigov audit-self`: `Registered CLI Commands: 73`, `System Health Score: 100/100`, `Action Items Identified: 0`.
+
+### 📌 Current State:
+- UniGov v1.1.0 at `100/100` self-audit health score with zero pending action items.
+
+### 📝 Next Steps:
+- Ready for next UniForge / UniGov feature or verification task.
+
+---
+*Signed by: Shoeb Ahmad*
